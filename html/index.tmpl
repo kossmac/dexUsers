@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/chota@latest">
+    <script src="https://kit.fontawesome.com/4c73e68f05.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <style>
+        body.dark {
+          --bg-color: #000;
+          --bg-secondary-color: #131316;
+          --font-color: #f5f5f5;
+          --color-grey: #ccc;
+          --color-darkGrey: #777;
+    }
+    </style>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.classList.add('dark');
+    }
+    </script>
+    <div id="top" class="container">
+        <form id="delete" action="/delete" method="post"></form>
+        <form id="add" action="/add" method="post"></form>
+        <h1>dexUsers</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>UUID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .passwords }}
+                <tr>
+                    <td>{{ .Username }}</td>
+                    <td>{{ .Email }}</td>
+                    <td>{{ .UserId }}</td>
+                    <td>
+                        <input form="delete" name="email" type="hidden" value={{ .Email }} >
+                        <button form="delete" type="submit">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {{ end }}
+                <tr>
+                    <td>
+                        <input form="add" name="username" placeholder="Username" type="text">
+                    </td>
+                    <td>
+                        <input form="add" name="email" placeholder="Email" type="text">
+                    </td>
+                    <td>
+                        <input form="add" name="password" placeholder="Password" type="password">
+                    </td>
+                    <td>
+                        <button form="add" type="submit">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
