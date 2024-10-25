@@ -19,10 +19,8 @@ import (
 var f embed.FS
 
 func newDexClient(hostAndPort string) (api.DexClient, error) {
-	conn, err := grpc.NewClient(hostAndPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		return nil, fmt.Errorf("dial: %v", err)
-	}
+	conn, _ := grpc.NewClient(hostAndPort, grpc.WithTransportCredentials(insecure.NewCredentials()))
+
 	return api.NewDexClient(conn), nil
 }
 
@@ -32,7 +30,7 @@ func main() {
 
 	client, err := newDexClient("127.0.0.1:5557")
 	if err != nil {
-		slog.Error("failed creating dex client: %v ", err)
+		slog.Error("failed creating dex client:", slog.String("error", err.Error()))
 	}
 
 	r := gin.Default()
@@ -41,7 +39,7 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		resp, err := client.ListPasswords(context.TODO(), &api.ListPasswordReq{})
 		if err != nil {
-			slog.Error("failed to list password:", slog.String("msg", err.Error()))
+			slog.Error("failed to list password:", slog.String("error", err.Error()))
 			c.HTML(503, "error.tmpl", gin.H{
 				"error": err.Error(),
 			})
